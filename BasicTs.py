@@ -279,22 +279,47 @@ def PlotSeries(ts, lags=12):
 PlotSeries(ts)
 
 ## Series transformation
+
+diff_degree = 7
+
 plt.figure(figsize=(12,7))
 ts = sales.groupby(["date"])["item_cnt_day"].sum()
 ts.plot()
 
 plt.figure(figsize=(12,7))
-log_ts = np.log(ts)
+log_ts = np.log(ts+1)
+PlotSeries(log_ts)
 log_ts.plot()
 
 plt.figure(figsize=(12,7))
-diff_ts=pd.Series.diff(log_ts, periods = 7)
+diff_ts=pd.Series.diff(log_ts, periods = diff_degree)
+PlotSeries(diff_ts)
 diff_ts.plot()
 
 plt.figure(figsize=(12,7))
-forw_ts = pd.Series(np.r_[log_ts.iloc[0],diff_ts.iloc[7:]].cumsum())
+forw_ts = pd.Series(np.r_[log_ts.iloc[0:diff_degree],diff_ts.iloc[diff_degree:]].cumsum())
+PlotSeries(forw_ts)
 forw_ts.plot()
 
+
+log_ts.iloc[0:diff_degree]
+
+
+len(diff_ts)
+len(forw_ts)
+
+
+
+df_ts = pd.DataFrame(ts)
+df_ts = df_ts.assign(log_ts  = log_ts.values)
+df_ts = df_ts.assign(diff_ts = diff_ts.values)
+df_ts = df_ts.assign(forw_ts = forw_ts.values)
+
+
+df_ts['forw_ts'][0:diff_degree]+df_ts['diff_ts'].fillna(0)
+df_ts['diff_ts'].nan_to_num(0)
+
+df_ts['diff_ts'].fillna(0)
 ##
 plt.figure(figsize=(12,7))
 diff_ts_7 = np.log((pd.Series.dropna(diff_ts))+1)
