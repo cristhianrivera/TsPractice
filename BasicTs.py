@@ -316,8 +316,54 @@ df_ts = df_ts.assign(diff_ts = diff_ts.values)
 df_ts = df_ts.assign(forw_ts = forw_ts.values)
 
 
-df_ts['forw_ts'][0:diff_degree]+df_ts['diff_ts'].fillna(0)
+
+df_ts['forw_ts'][0:diff_degree].values+df_ts['diff_ts'].fillna(0)
 df_ts['diff_ts'].nan_to_num(0)
+
+###############################################################################
+
+len(df_ts['forw_ts'][0:diff_degree].values)
+len(df_ts['forw_ts'][diff_degree:].values)
+
+df_piv = np.concatenate([df_ts['log_ts'][:diff_degree].values, 
+                np.zeros(len(df_ts['log_ts'][diff_degree:].values)-diff_degree)])
+df_piv = pd.DataFrame(df_piv)
+
+#df_ts = df_ts.assign(df_piv = df_piv.values)
+
+
+
+df_ts['log_ts'][:diff_degree]
+
+df_ts = df_ts.assign(df_fw_ts= df_ts['df_piv']+df_ts['diff_ts'].fillna(0))
+
+def ForwardSeries(ts_base, ts_diff,diff_degree):
+    len_ts  = len(ts_base)
+    ts_base = ts_base[:diff_degree]
+    new_ts = ts_base
+    for i in range(diff_degree):
+        new_ts[i] = new_ts[i] + ts_diff[i]
+    for i in range(len_ts):
+        
+    
+
+
+
+len(df_piv)
+len(df_ts['diff_ts'].dropna())  
+
+
+
+df_ts['diff_ts'][diff_degree:]  
+
+
+###############################################################################
+    
+    
+len(df_ts['forw_ts'].values)
+
+
+
 
 df_ts['diff_ts'].fillna(0)
 ##
